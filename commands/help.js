@@ -11,7 +11,7 @@ module.exports.run = async (bot, message, args) => {
 
 	let gEmbed = new Discord.RichEmbed()
 	.setTitle("General commands")
-	.setColor("#4286f4");
+	.setColor("#4286f4")
 	.addField("!botinfo", "Give information about me!")
 	.addField("!serverinfo", "Gives info on server");
 
