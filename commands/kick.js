@@ -1,23 +1,28 @@
-if(command === "kick") {
-    if(!message.member.roles.some(r=>["Administrator", "Owners", "Moderator","Dev - Coder",].includes(r.name)) )
-      return message.reply("Sorry, you don't have permissions to use this!");
-    
-    // Let's first check if we have a member and if we can kick them!
-    // message.mentions.members is a collection of people that have been mentioned, as GuildMembers.
-    let member = message.mentions.members.first();
-    if(!member)
-      return message.reply("Please mention a valid member of this server");
-    if(!member.kickable) 
-      return message.reply("I cannot kick this user! Do they have a higher role? Do I have kick permissions?");
-    
-    // slice(1) removes the first part, which here should be the user mention!
-    let reason = args.slice(1).join(' ');
-    if(!reason)
-      return message.reply("Please indicate a reason for the kick!");
-    
-    // Now, time for a swift kick in the nuts!
-    await member.kick(reason)
-      .catch(error => message.reply(`Sorry ${message.author} I couldn't kick because of : ${error}`));
-    message.reply(`${member.user.tag} has been kicked by ${message.author.tag} because: ${reason}`);
+const Discord = require("discord.js");
 
-  }ss
+module.exports.run = async (bot, message, args) => {
+  let kUser = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
+  if (!kUser) return message.channel.send("Can't find user.");
+  let kReason = args.join(" ").slice(22);
+
+  if (!message.member.hasPermission("MANAGE_MESSAGES")) return message.channel.send("Sorry, you are not permmited to do that.");
+  if (kUser.hasPermission("MANAGE_MESSAGES")) return message.channel.send("Sorry, That person can not be kicked.");
+
+  let kickEmbed = new Discord.RichEmbed()
+  .setColor("#ff9900")
+  .addField("Kicked User", `${kUser} with ID: ${kUser.id}`)
+  .addField("Kicked by", `<@${message.author.id}> with ID: ${message.author.id}`)
+  .addField("Kicked in", message.channel)
+  .addField("Time", message.createdAt)
+  .addField("Reason", kReason);
+
+  let kickChannel = message.guild.channels.find(`name`, "incidents");
+  if (!kickChannel) return message.channel.send("Couldn't find incidents channel.")
+
+  message.guild.member(kUser).kick(kReason);
+  kickChannel.send(kickEmbed);
+}
+
+module.exports.help = {
+  name: "kick"
+}
