@@ -33,7 +33,7 @@ module.exports.run = async (bot, message, args) => {
 	message.channel.send(hEmbed);
 	await user.send(gEmbed);
 	await user.send(fEmbed);
-	if (message.member.hasPermission("MANAGE_MESSAGES")) return await user.send(modEmbed);
+	if (message.member.hasPermission("MANAGE_MESSAGES")) return await user.send(mEmbed);
 }
 
 module.exports.help = {
