@@ -25,9 +25,15 @@ module.exports.run = async (bot, message, args) => {
 	.addField("!say {message}", "Get me to say somthing!")
 	.addField("!givemeowner", "maybe");
 
+	let mEmbed = new Discord.RichEmbed()
+	.setTitle("Moderator Commands")
+	.setColor("#4286f4")
+	.addField("kick {user} {reason}", "I will banish that user");
+
 	message.channel.send(hEmbed);
 	await user.send(gEmbed);
 	await user.send(fEmbed);
+	if (message.member.hasPermission("MANAGE_MESSAGES")) return await user.send(modEmbed);
 }
 
 module.exports.help = {
